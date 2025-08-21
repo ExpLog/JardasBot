@@ -1,6 +1,6 @@
 import random
 import tabulate
-from responses import BomDia
+from responses import BomDia, event_reminders
 from discord.ext import commands
 from datetime import datetime, timedelta, timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -39,9 +39,9 @@ async def sched_remind_events(bot: commands.Bot):
         event_start_utc = event.start_time.astimezone(timezone.utc)
         today_utc = datetime.now(timezone.utc)
         if (event.name == "Convívio semanal 🍻") and ( (event_start_utc - today_utc) < timedelta(days=7) ):
-            await channel1.send(f"Este sábado há convívios, apareçam seus caralhos")
+            await channel1.send(event_reminders.choose_phrase())
             await channel1.send(event.url)
-            await channel2.send(f"Este sábado há convívios, apareçam seus caralhos")
+            await channel2.send(event_reminders.choose_phrase())
             await channel2.send(event.url)
 
 
