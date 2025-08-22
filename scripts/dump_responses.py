@@ -4,6 +4,9 @@
 #     "pandas",
 # ]
 # ///
+import sqlite3
+
+from database.DBhelpers import db_select_all
 from responses import (
     BomDia,
     Cheats,
@@ -57,12 +60,26 @@ RESPONSES = {
 }
 
 
+def load_user_added_responses() -> list[str]:
+    conn = sqlite3.connect("wordstats.db")
+    with conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT vocabulary FROM vocabulary_table")
+        data = cursor.fetchall()
+    conn.close()
+    return [d[0] for d in data]
+
+
 def main():
     data = []
     for message_group, group_responses in RESPONSES.items():
         for text in group_responses:
             record = {"message_group": message_group, "text": text}
             data.append(record)
+
+    for text in load_user_added_responses():
+        record = {"message_group": "legacy_user_added", "text": text}
+        data.append(record)
 
     df = pd.DataFrame.from_records(data)
     df.to_csv("responses.csv", index=False)
