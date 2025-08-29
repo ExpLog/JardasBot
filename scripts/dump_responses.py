@@ -78,7 +78,7 @@ def main():
             data.append(record)
 
     for text in load_user_added_responses():
-        record = {"message_group": "legacy_user_added", "text": text}
+        record = {"message_group": "vocabulary_user_added", "text": text}
         data.append(record)
 
     df = pd.DataFrame.from_records(data)
